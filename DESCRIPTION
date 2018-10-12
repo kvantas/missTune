@@ -1,12 +1,14 @@
 Package: missTune
-Title: What the Package Does (One Line, Title Case)
+Title: Fast Imputation of Missing Values with Autotune
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Konstantinos",
+           family = "Vantas",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "kon.vantas@gmail.com")
+Description: Alternative implementation of the missRanger package using tuned Random Forests
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/kvantas/missTune
+BugReports: https://github.com/kvantas/missTune/issues
