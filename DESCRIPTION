@@ -1,14 +1,29 @@
 Package: missTune
-Title: Fast Imputation of Missing Values with Autotune
+Title: Fast Imputation of Missing Values by Automatic Tuned Chained Tree Ensembles
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Konstantinos",
            family = "Vantas",
            role = c("aut", "cre"),
            email = "kon.vantas@gmail.com")
-Description: Alternative implementation of the missRanger package using tuned Random Forests
+Description: Alternative implementation of the 'missRanger' and package using tuned 
+  Random Forests. missRanger is also an alternative implementation of the 
+  'MissForest' algorithm used to impute mixed-type data sets by chaining tree 
+  ensembles, introduced by Stekhoven, D.J. and Buehlmann, P. (2012).
+  <doi:10.1093/bioinformatics/btr597>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/kvantas/missTune
 BugReports: https://github.com/kvantas/missTune/issues
+Suggests: 
+    covr,
+    testthat,
+    spelling
+Language: en-US
+RoxygenNote: 6.1.0
+Imports: 
+    ranger,
+    assertthat,
+    caret,
+    e1071

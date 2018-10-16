@@ -1,2 +1,7 @@
+^codecov\.yml$
+^appveyor\.yml$
+^\.travis\.yml$
+^README\.Rmd$
+^LICENSE\.md$
 ^missTune\.Rproj$
 ^\.Rproj\.user$

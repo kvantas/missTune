@@ -1,0 +1,67 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+[![Travis build status](https://travis-ci.org/kvantas/missTune.svg?branch=master)](https://travis-ci.org/kvantas/missTune)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/kvantas/missTune?branch=master&svg=true)](https://ci.appveyor.com/project/kvantas/missTune)
+[![Coverage status](https://codecov.io/gh/kvantas/missTune/branch/master/graph/badge.svg)](https://codecov.io/github/kvantas/missTune?branch=master)
+
+# missTune
+
+This package is an alternative implementation of the `missRanger` package using tuned Random Forests.
+
+## Installation
+
+You can install the development version from Github with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("kvantas/missTune")
+
+```
+
+## Example
+
+This is a basic example about infilling a dataset.
+
+```{r "infill_iris"}
+library(missTune)
+# create random na values
+iris_na <- generate_na(iris, p = 0.1, seed = 123)
+
+# infill values
+res_imp <- miss_tune(x_miss = iris_na, num_trees = 100, tune_length = 5, verbose = TRUE)
+
+
+```
+
+Let's view the original data-set with the missing values and the infilled one.
+
+```{r "view data"}
+head(iris_na)
+head(res_imp$x_imp)
+```
+
+And finally let's create a plot with the mean out of bag error during the iterations of the algorithm.
+
+```{r "plot_oob_error"}
+library(ggplot2)
+mean_errors <- unlist(lapply(res_imp$oob_list, mean))
+ggplot()+
+  geom_line(aes(x = 1: length(mean_errors), mean_errors)) +
+  scale_x_continuous(breaks = 1: length(mean_errors)) + 
+  xlab("Iteration") + ylab("Error")+
+  theme_bw()
+```
+
