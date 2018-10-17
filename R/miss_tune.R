@@ -1,9 +1,9 @@
 #' Imputation of Missing Values by Automatic Tuned Chained Tree Ensembles
 #'
-#' @description Uses the \code{caret} and the \code{randomForest} packages to do
+#' @description Uses  \code{randomForest} package to do
 #' missing value imputation by automatic tuned chained tree ensembles, see
-#' [1, 2]. The resampling method used for the selection of the hyper-parameters
-#' of the automatic tuning is five folds cross validation.
+#' [1, 2]. The optimal \code{mtry} parameter is found using the \code{tuneRF}
+#' function.
 #' The iterative chaining stops as soon as \code{max_iter} is reached or if the
 #' average out-of-bag estimate of performance stops improving.
 #' In the latter case, the best imputed data is returned.
@@ -17,8 +17,6 @@
 #'   regression).
 #' @param num_trees Number of trees passed to \code{train} function of the
 #' \code{caret} package.
-#' @param tune_length the number of random sets of hyper-parameters passed to
-#' the \code{trainControl} function of the \code{caret} package.
 #'
 #' @return A class with the imputed data having the smaller OOB error, and all
 #' the OOB errors from the iterations of the algorithm.
@@ -45,14 +43,13 @@
 #' }
 
 miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
-                      tune_length = 12, verbose = TRUE) {
+                      verbose = TRUE) {
 
 
   # check parameters ###########################################################
   assertthat::assert_that(is.data.frame(x_miss))
   assertthat::assert_that(assertthat::is.count(max_iter))
   assertthat::assert_that(assertthat::is.count(num_trees))
-  assertthat::assert_that(assertthat::is.count(tune_length))
   assertthat::assert_that(assertthat::is.flag(verbose),
                           msg = "verbose is not a boolean (TRUE/FALSE)")
 
@@ -128,32 +125,27 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
 
       na_index <- x_na[[variable]]
 
-      # create formula for tuneRanger
+      # create formula
       frm <- reformulate(all_vars, response = variable)
 
-      # tune using caret
-      fit_control <- caret::trainControl(
-        method = "cv", number = 5, search = "random"
-      )
-      suppressMessages(
-        suppressWarnings(
-          rf_tune <- caret::train(
-            frm, data = x_imp[!na_index, all_vars], method = "rf",
-            num.trees = num_trees, tuneLength = tune_length,
-            trControl = fit_control
-          )
-        ))
+      # tune using RFtune
+      rf_tune <- randomForest::tuneRF(
+        y = x_imp[[variable]],
+        x = x_imp[setdiff(all_vars, variable)],
+        stepFactor=1, ntreeTry = num_trees,
+        plot = FALSE, doBest=TRUE, trace = FALSE)
+
       # use tuned model to predict NA values
-      pred <- caret::predict.train(rf_tune, x_imp[na_index, all_vars])
+      pred <- stats::predict(rf_tune, x_imp[na_index, all_vars])
       x_imp[na_index, variable] <- pred
 
       # OOB error
-      if (rf_tune$finalModel$type == "regression") {
+      if (rf_tune$type == "regression") {
         # rf's OOB prediction error is 1 - R2
-        oob_error[[variable]] <- 1 - rf_tune$finalModel$rsq[num_trees]
+        oob_error[[variable]] <- 1 - rf_tune$rsq[num_trees]
       } else {
         # rf's OOB prediction error is the ratio of missclassified samples
-        oob_error[[variable]] <- rf_tune$finalModel$err.rate[num_trees]
+        oob_error[[variable]] <- rf_tune$err.rate[num_trees]
       }
 
       # if error metric is NAN change it to zero

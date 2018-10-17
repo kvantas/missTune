@@ -23,6 +23,4 @@ Language: en-US
 RoxygenNote: 6.1.0
 Imports: 
     randomForest (>= 4.6),
-    assertthat (>= 0.2),
-    caret (>= 6.0),
-    e1071 (>= 1.7)
+    assertthat (>= 0.2)

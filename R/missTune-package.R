@@ -10,7 +10,7 @@
 #' @aliases missTune-package
 #' @docType package
 #'
-#' @importFrom stats var reformulate median na.omit runif
+#' @importFrom stats var reformulate median na.omit runif predict
 #'
 #' @keywords internal
 "_PACKAGE"

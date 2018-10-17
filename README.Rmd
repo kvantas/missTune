@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 # missTune
 
-This package is an alternative implementation of the `missForest` and `missRanger` packages using tuned Random Forests.
+This package is an alternative implementation of the `missForest` and `missRanger` packages using tuned Random Forests. The `tuneRF` function from the `randomForest` is used internally to find the optimal mtry parameter.
 
 ## Installation
 
@@ -41,7 +41,7 @@ library(missTune)
 iris_na <- generate_na(iris, p = 0.1, seed = 123)
 
 # infill values
-res_imp <- miss_tune(x_miss = iris_na, num_trees = 100, tune_length = 5, verbose = TRUE)
+res_imp <- miss_tune(x_miss = iris_na, num_trees = 100, verbose = TRUE)
 
 
 ```

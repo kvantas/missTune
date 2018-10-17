@@ -5,7 +5,7 @@
 \title{Imputation of Missing Values by Automatic Tuned Chained Tree Ensembles}
 \usage{
 miss_tune(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
-  tune_length = 12, verbose = TRUE)
+  verbose = TRUE)
 }
 \arguments{
 \item{x_miss}{A \code{data.frame} or \code{tibble} with missing values to
@@ -18,9 +18,6 @@ impute.}
 \item{num_trees}{Number of trees passed to \code{train} function of the
 \code{caret} package.}
 
-\item{tune_length}{the number of random sets of hyper-parameters passed to
-the \code{trainControl} function of the \code{caret} package.}
-
 \item{verbose}{Boolean. FALSE (default) to print nothing, TRUE to print
 the OOB prediction error per iteration and variable (1 minus R-squared for
 regression).}
@@ -30,14 +27,13 @@ A class with the imputed data having the smaller OOB error, and all
 the OOB errors from the iterations of the algorithm.
 }
 \description{
-Uses the \code{caret} and the \code{ranger} packages to do fast
+Uses  \code{randomForest} package to do
 missing value imputation by automatic tuned chained tree ensembles, see
-[1, 2]. The resampling method used for the selection of the automatic
-tuning is five folds cross validation.
+[1, 2]. The optimal \code{mtry} parameter is found using the \code{tuneRF}
+function.
 The iterative chaining stops as soon as \code{max_iter} is reached or if the
 average out-of-bag estimate of performance stops improving.
-In the latter case, except for the first iteration, the second last
-(i.e. best) imputed data is returned.
+In the latter case, the best imputed data is returned.
 }
 \examples{
 
@@ -49,9 +45,8 @@ head(iris_na)
 }
 }
 \references{
-[1] Wright, M. N. & Ziegler, A. (2016). ranger: A Fast Implementation of
-Random Forests for High Dimensional Data in C++ and R. Journal of Statistical
-Software, in press. http://arxiv.org/abs/1508.04409.
+[1] Liaw, Andy, and Matthew Wiener. "Classification and regression by
+randomForest." R news 2.3 (2002): 18-22.
 
 [2] Stekhoven, D.J. and Buehlmann, P. (2012). 'MissForest - nonparametric
 missing value imputation for mixed-type data', Bioinformatics, 28(1) 2012,

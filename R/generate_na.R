@@ -22,9 +22,9 @@ generate_na <- function(x, p = 0.1, seed = NULL) {
   assertthat::assert_that(is.data.frame(x))
 
   variables <- names(x)
+  n <- NROW(x)
   for (v in variables) {
-    na_index <- caret::createDataPartition(x[[v]], times = 1, p = p, list = FALSE)
-    na_index <- as.vector(na_index)
+    na_index <- sample(1:n, round(n * p))
     x[na_index, v] <- NA
   }
   x
