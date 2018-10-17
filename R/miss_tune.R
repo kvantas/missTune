@@ -49,13 +49,15 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
   # check parameters ###########################################################
   assertthat::assert_that(is.data.frame(x_miss))
   assertthat::assert_that(assertthat::is.count(max_iter))
+  assertthat::assert_that(assertthat::is.count(seed) | is.null(seed),
+    msg = "seed in not an integer"
+  )
   assertthat::assert_that(assertthat::is.count(num_trees))
   assertthat::assert_that(assertthat::is.flag(verbose),
-                          msg = "verbose is not a boolean (TRUE/FALSE)")
+    msg = "verbose is not a boolean (TRUE/FALSE)"
+  )
 
   # create data to impute  #####################################################
-
-  # make names for data.frame variables
 
   # get variables that are factors or numeric and dont have all NAs
   all_vars <- imputable_variables(x_miss)
@@ -63,14 +65,17 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
   # stop if no variable is appropriate
   assertthat::assert_that(
     length(all_vars) >= 2,
-    msg ="At least two factor and or numeric variables are needed to run the algorithm")
+    msg = "At least two factor and or numeric variables are needed to run the algorithm"
+  )
 
 
   # report about ignored variables
   if (verbose && length(all_vars) < ncol(x_miss)) {
     message(
-      paste("Variables ignored in algorithm:",
-            setdiff(names(x_miss), all_vars))
+      paste(
+        "Variables ignored in algorithm:",
+        setdiff(names(x_miss), all_vars)
+      )
     )
   }
 
@@ -81,7 +86,8 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
 
   assertthat::assert_that(
     length(impute_vars) > 0,
-    msg = "No appropriate variable found for infilling")
+    msg = "No appropriate variable found for infilling"
+  )
 
   # perform initial S.W.A.G. on x_miss  ########################################
 
@@ -94,9 +100,9 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
   x_imp <- x_miss
 
   x_imp[impute_vars] <- lapply(impute_vars, function(j) {
-    if(is.numeric(x_imp[[j]])) {
+    if (is.numeric(x_imp[[j]])) {
       imp_median(x_imp[[j]])
-    } else if(is.factor(x_imp[[j]])){
+    } else if (is.factor(x_imp[[j]])) {
       imp_factor(x_imp[[j]])
     }
   })
@@ -111,9 +117,8 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
   criterion <- FALSE
 
   while (TRUE) {
-
     if (verbose) {
-      message(paste("iteration", i+1, "in progress..."))
+      message(paste("iteration", i + 1, "in progress..."))
     }
 
     # keep last step's results
@@ -121,8 +126,7 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
     x_old <- x_imp
 
     # tune for every variable
-    for(variable in impute_vars) {
-
+    for (variable in impute_vars) {
       na_index <- x_na[[variable]]
 
       # create formula
@@ -132,8 +136,9 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
       rf_tune <- randomForest::tuneRF(
         y = x_imp[[variable]],
         x = x_imp[setdiff(all_vars, variable)],
-        stepFactor=1, ntreeTry = num_trees,
-        plot = FALSE, doBest=TRUE, trace = FALSE)
+        stepFactor = 1, ntreeTry = num_trees,
+        plot = FALSE, doBest = TRUE, trace = FALSE
+      )
 
       # use tuned model to predict NA values
       pred <- stats::predict(rf_tune, x_imp[na_index, all_vars])
@@ -161,7 +166,7 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
     i <- i + 1L
     oob[[i]] <- oob_error
     criterion <- mean(oob_error) > mean(oob_last)
-    if (i == max_iter || criterion){
+    if (i == max_iter || criterion) {
       break()
     }
   }
@@ -173,10 +178,11 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
   }
 
 
-  res <- list(x_imp = x_imp,
-              oob_list = oob[1:i])
+  res <- list(
+    x_imp = x_imp,
+    oob_list = oob[1:i]
+  )
 
   class(res) <- "missTune"
   res
-
 }

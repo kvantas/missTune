@@ -18,7 +18,8 @@
 #'
 generate_na <- function(x, p = 0.1, seed = NULL) {
   assertthat::assert_that(assertthat::is.number(p), p > 0 & p < 1,
-                          msg = "p must in (0, 1)")
+    msg = "p must in (0, 1)"
+  )
   assertthat::assert_that(is.data.frame(x))
 
   variables <- names(x)
@@ -28,5 +29,4 @@ generate_na <- function(x, p = 0.1, seed = NULL) {
     x[na_index, v] <- NA
   }
   x
-
 }

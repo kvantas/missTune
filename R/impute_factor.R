@@ -24,5 +24,4 @@ impute_factor <- function(x) {
   assertthat::assert_that(is.factor(x), msg = "x must be a factor vector.")
 
   imp_factor(x)
-
 }

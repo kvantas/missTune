@@ -1,7 +1,6 @@
 #' Impute numeric vectors with its median value
 #' @noRd
 imp_median <- function(x) {
-
   na_flag <- is.na(x)
 
   if (any(na_flag)) {
@@ -14,8 +13,7 @@ imp_median <- function(x) {
 #' Impute a vector univariate
 #' @noRd
 imp_uni <- function(x) {
-
-    na_flag <- is.na(x)
+  na_flag <- is.na(x)
 
   if (any(na_flag)) {
     x[na_flag] <- sample(x[!na_flag], sum(na_flag), replace = TRUE)
@@ -27,7 +25,6 @@ imp_uni <- function(x) {
 #' Impute a factor vector using the majority rule
 #' @noRd
 imp_factor <- function(x) {
-
   na_flag <- is.na(x)
 
   # omit NAs
