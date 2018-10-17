@@ -35,13 +35,10 @@ iris_na <- generate_na(iris, p = 0.1, seed = 123)
 res_imp <- miss_tune(x_miss = iris_na, num_trees = 100, tune_length = 5, verbose = TRUE)
 #> iteration 1 in progress...
 #>      Species  Sepal.Width Sepal.Length  Petal.Width Petal.Length 
-#>   0.05925926   0.48670072   0.16717432   0.06001528   0.02729028
+#>   0.04444444   0.45413112   0.18733999   0.06621034   0.03844020
 #> iteration 2 in progress...
 #>      Species  Sepal.Width Sepal.Length  Petal.Width Petal.Length 
-#>   0.05925926   0.37772191   0.15225623   0.04745723   0.02472808
-#> iteration 3 in progress...
-#>      Species  Sepal.Width Sepal.Length  Petal.Width Petal.Length 
-#>   0.05185185   0.43612524   0.15091663   0.04966686   0.02657664
+#>   0.05925926   0.46587393   0.19530027   0.05514636   0.03217743
 ```
 
 Let’s view the original data-set with the missing values and the
@@ -50,20 +47,20 @@ infilled one.
 ``` r
 head(iris_na)
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#> 1           NA         3.5          1.4         0.2  setosa
-#> 2          4.9          NA           NA         0.2  setosa
-#> 3          4.7         3.2          1.3         0.2  setosa
-#> 4          4.6         3.1          1.5          NA  setosa
-#> 5          5.0         3.6          1.4         0.2  setosa
-#> 6          5.4         3.9          1.7         0.4    <NA>
+#> 1          5.1         3.5           NA         0.2  setosa
+#> 2          4.9         3.0          1.4         0.2  setosa
+#> 3           NA         3.2          1.3         0.2  setosa
+#> 4          4.6         3.1          1.5         0.2  setosa
+#> 5          5.0         3.6           NA         0.2  setosa
+#> 6          5.4         3.9          1.7         0.4  setosa
 head(res_imp$x_imp)
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#> 1     4.599267    3.500000     1.400000   0.2000000  setosa
-#> 2     4.900000    3.243693     1.454608   0.2000000  setosa
-#> 3     4.700000    3.200000     1.300000   0.2000000  setosa
-#> 4     4.600000    3.100000     1.500000   0.2361191  setosa
-#> 5     5.000000    3.600000     1.400000   0.2000000  setosa
-#> 6     5.400000    3.900000     1.700000   0.4000000  setosa
+#> 1     5.100000         3.5     1.439798         0.2  setosa
+#> 2     4.900000         3.0     1.400000         0.2  setosa
+#> 3     4.511461         3.2     1.300000         0.2  setosa
+#> 4     4.600000         3.1     1.500000         0.2  setosa
+#> 5     5.000000         3.6     1.406139         0.2  setosa
+#> 6     5.400000         3.9     1.700000         0.4  setosa
 ```
 
 And finally let’s create a plot with the mean out of bag error during
