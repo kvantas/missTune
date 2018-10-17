@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 # missTune
 
-This package is an alternative implementation of the `missRanger` package using tuned Random Forests.
+This package is an alternative implementation of the `missForest` and `missRanger` packages using tuned Random Forests.
 
 ## Installation
 
