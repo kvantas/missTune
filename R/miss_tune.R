@@ -1,13 +1,12 @@
 #' Imputation of Missing Values by Automatic Tuned Chained Tree Ensembles
 #'
-#' @description Uses the \code{caret} and the \code{ranger} packages to do fast
+#' @description Uses the \code{caret} and the \code{randomForest} packages to do
 #' missing value imputation by automatic tuned chained tree ensembles, see
-#' [1, 2]. The resampling method used for the selection of the automatic
-#' tuning is five folds cross validation.
+#' [1, 2]. The resampling method used for the selection of the hyper-parameters
+#' of the automatic tuning is five folds cross validation.
 #' The iterative chaining stops as soon as \code{max_iter} is reached or if the
 #' average out-of-bag estimate of performance stops improving.
-#' In the latter case, except for the first iteration, the second last
-#' (i.e. best) imputed data is returned.
+#' In the latter case, the best imputed data is returned.
 #'
 #' @param x_miss A \code{data.frame} or \code{tibble} with missing values to
 #'   impute.
@@ -25,9 +24,9 @@
 #' the OOB errors from the iterations of the algorithm.
 #'
 #' @references
-#' [1] Wright, M. N. & Ziegler, A. (2016). ranger: A Fast Implementation of
-#' Random Forests for High Dimensional Data in C++ and R. Journal of Statistical
-#' Software, in press. http://arxiv.org/abs/1508.04409.
+#' [1] Liaw, Andy, and Matthew Wiener. "Classification and regression by
+#' randomForest." R news 2.3 (2002): 18-22.
+
 #'
 #' [2] Stekhoven, D.J. and Buehlmann, P. (2012). 'MissForest - nonparametric
 #' missing value imputation for mixed-type data', Bioinformatics, 28(1) 2012,
@@ -59,7 +58,7 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
 
   # create data to impute  #####################################################
 
-  # get all variables that are factor
+  # make names for data.frame variables
 
   # get variables that are factors or numeric and dont have all NAs
   all_vars <- imputable_variables(x_miss)
@@ -138,24 +137,23 @@ miss_tune <- function(x_miss, max_iter = 10L, seed = NULL, num_trees = 200,
       )
       suppressMessages(
         suppressWarnings(
-          ranger_tune <- caret::train(
-            frm, data = x_imp[!na_index, all_vars], method = "ranger",
+          rf_tune <- caret::train(
+            frm, data = x_imp[!na_index, all_vars], method = "rf",
             num.trees = num_trees, tuneLength = tune_length,
             trControl = fit_control
           )
         ))
       # use tuned model to predict NA values
-      pred <- caret::predict.train(ranger_tune, x_imp[na_index, all_vars])
+      pred <- caret::predict.train(rf_tune, x_imp[na_index, all_vars])
       x_imp[na_index, variable] <- pred
 
       # OOB error
-      if (ranger_tune$finalModel$problemType == "Regression") {
-        # ranger's OOB prediction error is in MSE, compute MSE/var(variable)
-        oob_error[[variable]] <- ranger_tune$finalModel$prediction.error /
-          var(x_imp[!na_index, variable])
+      if (rf_tune$finalModel$type == "regression") {
+        # rf's OOB prediction error is 1 - R2
+        oob_error[[variable]] <- 1 - rf_tune$finalModel$rsq[num_trees]
       } else {
-        # ranger's OOB prediction error is the ratio of missclassified samples
-        oob_error[[variable]] <- ranger_tune$finalModel$prediction.error
+        # rf's OOB prediction error is the ratio of missclassified samples
+        oob_error[[variable]] <- rf_tune$finalModel$err.rate[num_trees]
       }
 
       # if error metric is NAN change it to zero

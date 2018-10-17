@@ -6,24 +6,23 @@ Authors@R:
            family = "Vantas",
            role = c("aut", "cre"),
            email = "kon.vantas@gmail.com")
-Description: Alternative implementation of the 'missRanger' and package using tuned 
-  Random Forests. missRanger is also an alternative implementation of the 
-  'MissForest' algorithm used to impute mixed-type data sets by chaining tree 
-  ensembles, introduced by Stekhoven, D.J. and Buehlmann, P. (2012).
-  <doi:10.1093/bioinformatics/btr597>.
+Description: Alternative implementation of the 'missForest' and 'missRanger'
+  packages using tuned Random Forests. The 'MissForest' algorithm is used to 
+  impute mixed-type data sets by chaining tree ensembles, introduced by 
+  Stekhoven, D.J. and Buehlmann, P. (2012). <doi:10.1093/bioinformatics/btr597>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/kvantas/missTune
 BugReports: https://github.com/kvantas/missTune/issues
 Suggests: 
-    covr,
-    testthat,
-    spelling
+    covr (>= 3.1),
+    testthat (>= 2.0),
+    spelling (>= 1.2)
 Language: en-US
 RoxygenNote: 6.1.0
 Imports: 
-    ranger,
-    assertthat,
-    caret,
-    e1071
+    randomForest (>= 4.6),
+    assertthat (>= 0.2),
+    caret (>= 6.0),
+    e1071 (>= 1.7)
