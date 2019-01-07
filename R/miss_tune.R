@@ -1,7 +1,7 @@
 #' Imputation of Missing Values by Automatic Tuned Chained Tree Ensembles
 #'
 #' @description Uses  \code{randomForest} package to do
-#' missing value imputation by automatic tuned chained tree ensembles, see
+#' missing value imputation by automatic chained tree ensembles, see
 #' [1, 2]. The optimal \code{mtry} parameter is found using the \code{tuneRF}
 #' function.
 #' The iterative chaining stops as soon as \code{max_iter} is reached or if the

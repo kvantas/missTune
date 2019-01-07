@@ -18,8 +18,5 @@
 #'
 impute_univariate <- function(x) {
   test_vector(x)
-
-  na_flag <- is.na(x)
-
   imp_uni(x)
 }

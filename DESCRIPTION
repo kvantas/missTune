@@ -1,13 +1,13 @@
-Package: missTune
-Title: Fast Imputation of Missing Values by Automatic Tuned Chained Tree Ensembles
+Package: misSpatialTune
+Title: Imputation of Missing Values by Automatic Tuned Chained Spatial Tree Ensembles
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Konstantinos",
            family = "Vantas",
            role = c("aut", "cre"),
            email = "kon.vantas@gmail.com")
-Description: Alternative implementation of the 'missForest' and 'missRanger'
-  packages using tuned Random Forests. The 'MissForest' algorithm is used to 
+Description: An impementation of automatic tuned spatial tree ensembles using
+  Random Forests. The 'MissForest' algorithm is used as a basis to 
   impute mixed-type data sets by chaining tree ensembles, introduced by 
   Stekhoven, D.J. and Buehlmann, P. (2012). <doi:10.1093/bioinformatics/btr597>.
 License: MIT + file LICENSE
