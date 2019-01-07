@@ -1,4 +1,4 @@
-Package: misSpatialTune
+Package: missTune
 Title: Imputation of Missing Values by Automatic Tuned Chained Spatial Tree Ensembles
 Version: 0.0.0.9000
 Authors@R: 
@@ -20,7 +20,7 @@ Suggests:
     testthat (>= 2.0),
     spelling (>= 1.2)
 Language: en-US
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Imports: 
     randomForest (>= 4.6),
     assertthat (>= 0.2)
